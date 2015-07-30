@@ -141,7 +141,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['test', 'concat', 'uglify', 'cssmin', 'shell']);
 
   grunt.registerTask('default', ['shell:prodServer' ]);
-  
+
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
@@ -153,7 +153,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
       // add your production server task here
-      'test',
       'build',
       'upload'
   ]);
