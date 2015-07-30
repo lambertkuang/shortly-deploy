@@ -4,11 +4,11 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     concat: {
-      options: {
-        separator: ';',
-      },
+      // options: {
+      //   separator: ';',
+      // },
       dist: {
-        src: ['app/collections/*', 'app/models/*', 'app/config.js'],
+        src: ['public/client/*'],
         dest: 'built.js'
       }
     },
@@ -34,7 +34,11 @@ module.exports = function(grunt) {
       },
       my_target: {
         files: {
-          'built.min.js': ['built.js']          
+          'built.min.js': ['built.js'],
+          'public/lib/backbone.js': ['public/lib/backbone.js'],      
+          'public/lib/handlebars.js': ['public/lib/handlebars.js'],
+          'public/lib/jquery.js': ['public/lib/jquery.js'],
+          'public/lib/underscore.js': ['public/lib/underscore.js']    
         }
       }
     },
@@ -92,7 +96,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
-
+        command: ['git add .', 'git commit', 'git push azure master'].join('&&')
       }
     },
   });
@@ -124,14 +128,16 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
-    'mochaTest'
+    'jshint', 'mochaTest'
   ]);
 
-  grunt.registerTask('build', ['jshint', 'mochaTest', 'concat', 'uglify', 'cssmin', 'shell']);
+  grunt.registerTask('build', ['test', 'concat', 'uglify', 'cssmin', 'shell']);
 
+  grunt.registerTask('default', ['shell:prodServer']);
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.task.run(['default']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -139,6 +145,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
       // add your production server task here
+      'test',
+      'build',
+      'upload'
   ]);
 
 
