@@ -2,7 +2,15 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['app/collections/*', 'app/models/*', 'app/config.js'],
+        dest: 'built.js'
+      }
     },
 
     mochaTest: {
@@ -21,11 +29,26 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      options: {
+        mangle: false
+      },
+      my_target: {
+        files: {
+          'built.min.js': ['built.js']          
+        }
+      }
     },
 
     jshint: {
       files: [
         // Add filespec list here
+        'app/collections/*', 
+        'app/models/*', 
+        'app/config.js',
+        'lib/*',
+        'public/client/*',
+        'server-config.js',
+        'server.js'
       ],
       options: {
         force: 'true',
@@ -39,6 +62,15 @@ module.exports = function(grunt) {
 
     cssmin: {
         // Add filespec list here
+      options: {
+        shorthandCompacting: false,
+        roundingPrecision: -1
+      },
+      target: {
+        files: {
+          'output.css': ['public/style.css']
+        }
+      }
     },
 
     watch: {
@@ -60,6 +92,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+
       }
     },
   });
@@ -94,8 +127,7 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', [
-  ]);
+  grunt.registerTask('build', ['jshint', 'mochaTest', 'concat', 'uglify', 'cssmin', 'shell']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
