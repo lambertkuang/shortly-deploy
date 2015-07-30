@@ -96,8 +96,17 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
-        command: ['git add .', 'git commit', 'git push azure master'].join('&&')
+        command: 'git push azure'
       }
+      // makeDir: {
+      //   command: 'mkdir newdirectory'
+      // },
+      // touch: {
+      //   command: ['cd newdirectory', 'touch newfile.txt'].join('&&')
+      // }, 
+      // rootTouch: {
+      //   command: 'touch file.txt'
+      // }
     },
   });
 
@@ -127,13 +136,12 @@ module.exports = function(grunt) {
   // Main grunt tasks
   ////////////////////////////////////////////////////
 
-  grunt.registerTask('test', [
-    'jshint', 'mochaTest'
-  ]);
+  grunt.registerTask('test', ['jshint', 'mochaTest']);
 
   grunt.registerTask('build', ['test', 'concat', 'uglify', 'cssmin', 'shell']);
 
-  grunt.registerTask('default', ['shell:prodServer']);
+  grunt.registerTask('default', ['shell:prodServer' ]);
+  
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
@@ -150,5 +158,5 @@ module.exports = function(grunt) {
       'upload'
   ]);
 
-
+  grunt.registerTask('make', ['shell']);
 };
